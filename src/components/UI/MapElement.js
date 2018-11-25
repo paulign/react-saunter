@@ -8,7 +8,7 @@ class MapContainer extends Component {
 
         this.state = {
             center: { lat: 50.447704, lng: 30.522050 },
-            selectedID: this.props.selectedID
+            selectedID: this.props.selectedPath ? this.props.selectedPath.id : null
         }
     }
 
@@ -24,7 +24,7 @@ class MapContainer extends Component {
     }
 
     componentWillReceiveProps = async (nextProps) => {
-        const newID = nextProps.selectedID;
+        const newID = nextProps.selectedPath ? nextProps.selectedPath.id : null;
 
         if (this.props.changableCenter && newID !== this.state.selectedID) {
             const center = { ...this.state.center };
@@ -35,7 +35,7 @@ class MapContainer extends Component {
                 center['lat'] = +_center.latitude;
                 center['lng'] = +_center.longitude;
             }
-            
+
             if (this.map) {
                 this.map.panTo(center);
             }
@@ -72,7 +72,7 @@ class MapContainer extends Component {
                 onClick={this.onMapClick}
                 ref={map => this.map = map}
             >
-                {markers && markers.length && markers.map((marker, index) => {
+                {!!markers && !!markers.length && markers.map((marker, index) => {
                     return <Marker
                         key={index}
                         defaultDraggable={!!this.props.editable}
@@ -80,9 +80,9 @@ class MapContainer extends Component {
                         position={{ lat: marker.lat, lng: marker.lng }}
                     />
                 })}
-                {markers && markers.length > 1 &&
+                {!!markers && markers.length > 1 ? (
                     <Polyline path={markers} options={{ strokeColor: '#FF0000', strokeWidth: 2 }} />
-                }
+                ) : null}
             </GoogleMap>
         )
     }

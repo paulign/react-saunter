@@ -17,13 +17,14 @@ class PathDetails extends Component {
         }
     }
     componentDidMount() {
-        this.loadPath(this.props.selectedID);
+        this.loadPath();
     }
 
     componentDidUpdate = async () => {
         const newID = this.props.match.params.id;
         if (this.state.selectedID !== newID) {
-            await this.loadPath(newID);
+            await this.setState({selectedID: newID});
+            await this.loadPath();
         }
     }
 
@@ -31,8 +32,9 @@ class PathDetails extends Component {
         this.unsubscribeFromRef();
     }
 
-    loadPath = (selectedID) => {
+    loadPath = () => {
         this.unsubscribeFromRef();
+        const { selectedID } = this.state;
         this.ref = firebase.database().ref(`walking_paths/${selectedID}`);
         this.ref.on('value', this.onLoadPath);
     }
@@ -40,15 +42,15 @@ class PathDetails extends Component {
     onLoadPath = async (snapshot) => {
         try {
             const selectedPath = snapshot.val();
-            await this.setState({ isLoading: false, selectedPath, selectedID: selectedPath.id });
+            await this.setState({ isLoading: false, selectedPath });
         } catch (error) {
-            this.setState({ isLoading: false, selectedPath: null, selectedID: null });
+            this.setState({ isLoading: false, selectedPath: null });
         }
     }
 
     unsubscribeFromRef = () => {
         if (this.ref) {
-            this.ref.off('value',this.onLoadPath);
+            this.ref.off('value', this.onLoadPath);
             this.ref = null;
         }
     }
@@ -80,8 +82,8 @@ class PathDetails extends Component {
         const { selectedPath } = this.state;
 
         return (
-            <div className="path-details px-lg-3 mb-4 mb-lg-0 pb-4 pb-lg-0 position-relative">
-                {selectedPath && (
+            <div className="path-details px-lg-3 mb-4 mb-lg-0 pb-4 pb-lg-0 position-relative h-100">
+                {!!selectedPath ? (
                     <div>
                         <div className="d-flex justify-content-between mb-4">
                             <h2 className="mb-0 mr-2 d-flex align-items-center">
@@ -97,7 +99,7 @@ class PathDetails extends Component {
                             <MapContainer
                                 markers={selectedPath.path}
                                 changableCenter
-                                selectedID={this.state.selectedID}
+                                selectedPath={this.state.selectedPath}
                             />
                         </div>
                         <div className="text-right">
@@ -105,8 +107,10 @@ class PathDetails extends Component {
                             <a href="#remove" className="d-block text-danger lead" onClick={this.onRremove}>Remove</a>
                         </div>
                     </div>
+                ) : (
+                    <div className="h-100 d-flex align-items-center justify-content-center lead">{!this.state.isLoading && !this.props.isUpdating ? "Not found..." : null}</div>
                 )}
-                <Loading visible={this.props.isUpdating || this.state.isLoading}/>
+                <Loading visible={this.props.isUpdating || this.state.isLoading} />
             </div>
         );
     }

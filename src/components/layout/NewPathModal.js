@@ -51,11 +51,11 @@ class NewPathModal extends Component {
     renderTextInput = ({ input, label }) => {
         return (
             <FormGroup>
-                {label && <Label>{label}</Label>}
+                {!!label && <Label>{label}</Label>}
                 <Input {...input} />
             </FormGroup>
 
-        )
+        );
     }
 
     renderTextArea = ({
@@ -66,11 +66,47 @@ class NewPathModal extends Component {
     }) => {
         return (
             <FormGroup>
-                {label && <Label>{label}</Label>}
+                {!!label && <Label>{label}</Label>}
                 <Input type="textarea" {...input} rows={rows} maxLength={limit} />
                 {!!limit ? <small className=" d-block mt-2 text-right">Limit {input.value.length} of {limit}</small> : null}
             </FormGroup>
-        )
+        );
+    }
+
+    renderForm() {
+        return (
+            <Form onSubmit={this.props.handleSubmit}>
+                <Field name="title" type="text" component={this.renderTextInput} label="Title" />
+                <Field name="short_description" type="text" label="Short Description" component={(props) => this.renderTextArea({ ...props, limit: 160 })} />
+                <Field name="full_description" type="text" label="Full Description" component={(props) => this.renderTextArea({ ...props, rows: 4 })} />
+                <Field name="path" type="hidden" component="input" />
+                <Field name="distance" type="hidden" component="input" />
+                <div className="text-center">
+                    <div className="my-4 lead">
+                        <FontAwesomeIcon className="d-inline-block mr-2" icon="map-marked-alt" />
+                        Length {this.getDistance()}</div>
+                    <Button disabled={!this.props.valid || !this.props.path.length} outline size="lg" color="primary" type="submit">Add path</Button>
+                </div>
+            </Form>
+        );
+    }
+
+    renderMap() {
+        return (
+            <div className="h-100 bg-light map-container">
+                <Button color="primary" type="button" onClick={() => this.setState({ addingMarker: true })} className="add-marker-button">
+                    <FontAwesomeIcon className="d-inline-block mr-2" icon="map-marker-alt" />
+                    AddMarker
+                </Button>
+                <MapContainer
+                    editable
+                    markers={this.props.path}
+                    onMarkerDrag={this.onMarkerDrag}
+                    onAddMarker={this.onAddMarker}
+                    addingMarker={this.state.addingMarker}
+                />
+            </div>
+        );
     }
 
     render() {
@@ -81,40 +117,16 @@ class NewPathModal extends Component {
                     <ModalBody>
                         <div className="row">
                             <div className="col-lg-6 order-2 order-lg-1">
-                                <Form onSubmit={this.props.handleSubmit}>
-                                    <Field name="title" type="text" component={this.renderTextInput} label="Title" />
-                                    <Field name="short_description" type="text" label="Short Description" component={(props) => this.renderTextArea({ ...props, limit: 160 })} />
-                                    <Field name="full_description" type="text" label="Full Description" component={(props) => this.renderTextArea({ ...props, rows: 4 })} />
-                                    <Field name="path" type="hidden" component="input" />
-                                    <Field name="distance" type="hidden" component="input" />
-                                    <div className="text-center">
-                                        <div className="my-4 lead">
-                                            <FontAwesomeIcon className="d-inline-block mr-2" icon="map-marked-alt" />
-                                            Length {this.getDistance()}</div>
-                                        <Button disabled={!this.props.valid || !this.props.path.length} outline size="lg" color="primary" type="submit">Add path</Button>
-                                    </div>
-                                </Form>
+                                {this.renderForm()}
                             </div>
-                            <div className="col-lg-6 order-1 order-lg-2">
-                                <div className="h-100 py-3">
-                                    <div className="h-100 bg-light map-container">
-                                        <Button color="primary" type="button" onClick={() => this.setState({ addingMarker: true })} className="add-marker-button">
-                                            <FontAwesomeIcon className="d-inline-block mr-2" icon="map-marker-alt" />
-                                            AddMarker
-                                        </Button>
-                                        <MapContainer
-                                            editable
-                                            markers={this.props.path}
-                                            onMarkerDrag={this.onMarkerDrag}
-                                            onAddMarker={this.onAddMarker}
-                                            addingMarker={this.state.addingMarker}
-                                        />
-                                    </div>
+                            <div className="col-lg-6 order-1 order-lg-2 mb-3 mb-lg-0">
+                                <div className="h-100">
+                                    {this.renderMap()}
                                 </div>
                             </div>
                         </div>
                     </ModalBody>
-                    <Loading visible={this.props.isSubmitting}/>
+                    <Loading visible={this.props.isSubmitting} />
                 </Modal>
             </div>
         );
