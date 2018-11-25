@@ -1,26 +1,35 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { createBrowserHistory } from 'history';
+import { applyMiddleware, compose, createStore } from 'redux';
+import { routerMiddleware } from 'connected-react-router';
+import thunk from "redux-thunk";
+import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'connected-react-router'
+
+import rootReducer from './reducers';
+
+const history = createBrowserHistory()
+
+const store = createStore(
+  rootReducer(history),
+  compose(
+    applyMiddleware(
+      routerMiddleware(history),
+      thunk
+    )
+  )
+)
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Provider store={store}>
+        <ConnectedRouter history={history}>
+          <div>
+            Saunter
+          </div>
+        </ConnectedRouter>
+      </Provider>
     );
   }
 }
