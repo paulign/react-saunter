@@ -1,7 +1,27 @@
 import React, { Component } from 'react';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polyline } from "react-google-maps"
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polyline } from "react-google-maps";
+import geolib from 'geolib';
 
 class MapContainer extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            center: { lat: 50.447704, lng: 30.522050 }
+        }
+    }
+
+    componentDidMount () {
+        let center = { lat: 50.447704, lng: 30.522050 };
+
+        if(this.props.markers && this.props.markers.length) {
+            const _center = geolib.getCenter(this.props.markers);
+            center['lat'] = +_center.latitude;
+            center['lng'] = +_center.longitude;
+        }
+        this.setState({center});
+    }
+
     onMapClick = (e) => {
         const { addingMarker, onAddMarker } = this.props;
 
@@ -27,7 +47,7 @@ class MapContainer extends Component {
             <GoogleMap
                 defaultZoom={15}
                 options={{ disableDefaultUI: true, draggableCursor }}
-                defaultCenter={{ lat: 50.447704, lng: 30.522050 }}
+                center={this.state.center}
                 onClick={this.onMapClick}
             >
                 {markers && markers.length && markers.map((marker, index) => {
