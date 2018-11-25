@@ -4,9 +4,11 @@ import { applyMiddleware, compose, createStore } from 'redux';
 import { routerMiddleware } from 'connected-react-router';
 import thunk from "redux-thunk";
 import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'connected-react-router'
+import { ConnectedRouter } from 'connected-react-router';
 
 import rootReducer from './reducers';
+import RootView from './components/layout/RootView';
+import './icons';
 
 const history = createBrowserHistory()
 
@@ -25,9 +27,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <div>
-            Saunter
-          </div>
+          <RootView />
         </ConnectedRouter>
       </Provider>
     );

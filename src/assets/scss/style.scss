@@ -1,0 +1,22 @@
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
+
+@import './variables';
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+.navbar {
+    height: 80px;
+    border-bottom: 1px solid $dark;
+
+    @include media-breakpoint-down(sm) {
+        height: 60px;
+    }
+}
+
+main {
+    @include media-breakpoint-up(lg) {
+        height: calc(100vh - 80px);
+    }
+}
