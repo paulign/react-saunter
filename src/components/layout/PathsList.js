@@ -36,6 +36,14 @@ class PathsList extends Component {
             let list = [];
             if (snapshot.exists()) {
                 list = Object.values(snapshot.val());
+                list = list.sort((a, b) => {
+                    if(a.favorite && !b.favorite) {
+                        return -1;
+                    } else if (b.favorite && !a.favorite) {
+                        return 1;
+                    }
+                    return 0;
+                });
             }
             console.log(list);
             await this.setState({ isLoading: false, list });

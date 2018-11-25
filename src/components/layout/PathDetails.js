@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import firebase from '../../firebaseConfig';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import MapContainer from '../containers/MapContainer';
 import { connect } from 'react-redux';
 import { toggleFavoriteState, removePath } from '../../actions';
@@ -86,7 +87,8 @@ class PathDetails extends Component {
                 {selectedPath && (
                     <div>
                         <div className="d-flex justify-content-between mb-4">
-                            <h2 className="mb-0 mr-2">
+                            <h2 className="mb-0 mr-2 d-flex align-items-center">
+                                {selectedPath.favorite && <FontAwesomeIcon className="mr-1" color="#007bff" icon="star" />}
                                 {selectedPath.title}
                             </h2>
                             <strong className="lead font-weight-bold">{this.getDistance()}</strong>

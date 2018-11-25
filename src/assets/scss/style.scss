@@ -38,10 +38,18 @@ main {
             color: $dark;
             background-color: $light;
 
+            .favorite-star {
+                color: $primary;
+            }
+
             &.selected {
                 background-color: $blue;
                 color: $white;
                 pointer-events: none;
+
+                .favorite-star {
+                    color: $white;
+                }
             }
 
             .path-distance {

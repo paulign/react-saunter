@@ -14,7 +14,7 @@ class PathItem extends Component {
     }
 
     render() {
-        const { id, title, short_description } = this.props;
+        const { id, title, short_description, favorite } = this.props;
         return (
             <NavLink to={`/path/${id}`} className="path-item p-3" activeClassName="selected">
                 <div className="row align-items-center">
@@ -22,7 +22,10 @@ class PathItem extends Component {
                         <FontAwesomeIcon className="mr-3" size="3x" icon="expand-arrows-alt" />
                     </div>
                     <div className="col">
-                        <h3 className="mb-2">{title}</h3>
+                        <div className="d-flex align-items-center mb-2">
+                            {favorite && <FontAwesomeIcon className="mr-1 favorite-star" icon="star" />}
+                            <h3 className="mb-0">{title}</h3>
+                        </div>
                         <div>
                             {short_description}
                         </div>
