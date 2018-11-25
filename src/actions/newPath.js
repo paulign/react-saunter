@@ -6,6 +6,7 @@ import {
     ADD_NEW_PATH_ERROR
 } from './types';
 import { reset } from 'redux-form';
+import { push } from 'connected-react-router';
 
 export const addMapMarker = (payload) => {
     return { type: ADD_MAP_MARKER, payload }
@@ -24,6 +25,7 @@ export const createNewPath = (onSuccess = () => {}) => async (dispatch, getState
         dispatch({ type: ADD_NEW_PATH_SUCCESS });
         onSuccess();
         dispatch(reset('newPath'));
+        dispatch(push(`/path/${id}`));
     } catch (error) {
         console.log(error);
         dispatch({ type: ADD_NEW_PATH_ERROR });
