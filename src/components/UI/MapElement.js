@@ -84,7 +84,7 @@ class MapContainer extends Component {
                     <Polyline path={markers} options={{ strokeColor: '#FF0000', strokeWidth: 2 }} />
                 ) : null}
             </GoogleMap>
-        )
+        );
     }
 }
 
