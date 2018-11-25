@@ -17,7 +17,7 @@ class Header extends Component {
                         Saunter
                     </NavbarBrand>
                     <Nav className="ml-auto" navbar>
-                        <Button color="primary">Add Path</Button>
+                        <Button onClick={this.props.onToggleNewPathModal} color="primary">Add Path</Button>
                     </Nav>
                 </Navbar>
             </header>

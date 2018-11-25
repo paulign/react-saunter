@@ -2,9 +2,22 @@ import React, { Component } from 'react';
 import Header from './Header';
 import PathList from './PathsList';
 import PathDetails from './PathDetails';
+import NewPathModal from './NewPathModal';
 import { Switch, Route } from 'react-router'
 
 class RootView extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            newPathModalVisible: false
+        }
+    }
+
+    toggleNewPathModal = () => {
+        const {newPathModalVisible} = this.state;
+        this.setState({ newPathModalVisible: !newPathModalVisible})
+    }
 
     renderEmptyDetails = () => {
         return (
@@ -15,7 +28,7 @@ class RootView extends Component {
     render() {
         return (
             <div className="px-3 px-md-5">
-                <Header />
+                <Header onToggleNewPathModal={this.toggleNewPathModal} />
                 <main className="py-3 py-md-4">
                     <div className="row">
                         <div className="col-lg-6 order-2 order-lg-1 paths-list-contailer">
@@ -29,6 +42,7 @@ class RootView extends Component {
                         </div>
                     </div>
                 </main>
+                <NewPathModal toggle={this.toggleNewPathModal} onSubmit={(values) => console.log(values)} visible={this.state.newPathModalVisible} />
             </div>
         );
     }
