@@ -4,6 +4,7 @@ import { Field, reduxForm, Form } from 'redux-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { connect } from 'react-redux';
 import geolib from 'geolib';
+import Loading from '../UI/Loading';
 
 import MapContainer from '../containers/MapContainer';
 import { addMapMarker } from '../../actions';
@@ -113,6 +114,7 @@ class NewPathModal extends Component {
                             </div>
                         </div>
                     </ModalBody>
+                    <Loading visible={this.props.isSubmitting}/>
                 </Modal>
             </div>
         );
