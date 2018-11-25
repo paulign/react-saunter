@@ -7,19 +7,39 @@ class MapContainer extends Component {
         super(props);
 
         this.state = {
-            center: { lat: 50.447704, lng: 30.522050 }
+            center: { lat: 50.447704, lng: 30.522050 },
+            selectedID: this.props.selectedID
         }
     }
 
-    componentDidMount () {
+    componentDidMount() {
         let center = { lat: 50.447704, lng: 30.522050 };
 
-        if(this.props.markers && this.props.markers.length) {
+        if (this.props.markers && this.props.markers.length) {
             const _center = geolib.getCenter(this.props.markers);
             center['lat'] = +_center.latitude;
             center['lng'] = +_center.longitude;
         }
-        this.setState({center});
+        this.setState({ center });
+    }
+
+    componentWillReceiveProps = async (nextProps) => {
+        const newID = nextProps.selectedID;
+
+        if (this.props.changableCenter && newID !== this.state.selectedID) {
+            const center = { ...this.state.center };
+
+            if (nextProps.markers && nextProps.markers.length) {
+                const _center = geolib.getCenter(nextProps.markers);
+                center['lat'] = +_center.latitude;
+                center['lng'] = +_center.longitude;
+            }
+            await this.setState({ center });
+            if (this.map) {
+                this.map.panTo(center);
+            }
+
+        }
     }
 
     onMapClick = (e) => {
@@ -49,6 +69,7 @@ class MapContainer extends Component {
                 options={{ disableDefaultUI: true, draggableCursor }}
                 center={this.state.center}
                 onClick={this.onMapClick}
+                ref={map => this.map = map}
             >
                 {markers && markers.length && markers.map((marker, index) => {
                     return <Marker
