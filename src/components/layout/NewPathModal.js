@@ -6,13 +6,13 @@ import { connect } from 'react-redux';
 import geolib from 'geolib';
 
 import MapContainer from '../containers/MapContainer';
+import { addMapMarker } from '../../actions';
 
 class NewPathModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            addingMarker: false,
-            markers: []
+            addingMarker: false
         }
     }
 
@@ -32,11 +32,19 @@ class NewPathModal extends Component {
     }
 
     onAddMarker = (latLng) => {
-        const markers = [].concat(this.state.markers);
-        markers.push(latLng);
-        const distance = geolib.getPathLength(markers);
-        console.log(distance);
-        this.setState({ markers, addingMarker: false });
+        const path = [].concat(this.props.path);
+        path.push(latLng);
+        const distance = geolib.getPathLength(path);
+        this.props.addMapMarker({ path, distance });
+        this.setState({ addingMarker: false });
+    }
+
+    getDistance = () => {
+        const {distance} = this.props;
+        let valueType = distance > 1000 ? 'km' : 'm';
+        let displayValue = distance > 1000 ? (distance / 1000).toFixed(2) : distance;
+
+        return `${displayValue} ${valueType}`
     }
 
     renderTextArea = ({
@@ -66,11 +74,13 @@ class NewPathModal extends Component {
                                     <Field name="title" type="text" component={this.renderTextInput} label="Title" />
                                     <Field name="short_description" type="text" label="Short Description" component={(props) => this.renderTextArea({ ...props, limit: 160 })} />
                                     <Field name="full_description" type="text" label="Full Description" component={(props) => this.renderTextArea({ ...props, rows: 4 })} />
+                                    <Field name="path" type="hidden" component="input" />
+                                    <Field name="distance" type="hidden" component="input" />
                                     <div className="text-center">
                                         <div className="my-4 lead">
                                             <FontAwesomeIcon className="d-inline-block mr-2" icon="map-marked-alt" />
-                                            Length 1.13 km</div>
-                                        <Button disabled={!this.props.valid} outline size="lg" color="primary" type="submit">Add path</Button>
+                                            Length {this.getDistance()}</div>
+                                        <Button disabled={!this.props.valid || !this.props.path.length} outline size="lg" color="primary" type="submit">Add path</Button>
                                     </div>
                                 </Form>
                             </div>
@@ -81,7 +91,7 @@ class NewPathModal extends Component {
                                             <FontAwesomeIcon className="d-inline-block mr-2" icon="map-marker-alt" />
                                             AddMarker
                                         </Button>
-                                        <MapContainer markers={this.state.markers} onAddMarker={this.onAddMarker} addingMarker={this.state.addingMarker} />
+                                        <MapContainer markers={this.props.path} onAddMarker={this.onAddMarker} addingMarker={this.state.addingMarker} />
                                     </div>
                                 </div>
                             </div>
@@ -116,8 +126,11 @@ NewPathModal = reduxForm({
 })(NewPathModal);
 
 const mapStateToProps = (state) => {
+    const path = state.form.newPath && state.form.newPath.values ? state.form.newPath.values.path : [];
+    const distance = state.form.newPath && state.form.newPath.values ? state.form.newPath.values.distance : 0
     return {
-
+        path: path || [],
+        distance: distance || 0
     }
 }
-export default connect(mapStateToProps)(NewPathModal);
+export default connect(mapStateToProps, { addMapMarker })(NewPathModal);

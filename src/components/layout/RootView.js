@@ -4,6 +4,8 @@ import PathList from './PathsList';
 import PathDetails from './PathDetails';
 import NewPathModal from './NewPathModal';
 import { Switch, Route } from 'react-router'
+import { connect } from 'react-redux';
+import {createNewPath} from '../../actions/';
 
 class RootView extends Component {
     constructor(props) {
@@ -42,10 +44,10 @@ class RootView extends Component {
                         </div>
                     </div>
                 </main>
-                <NewPathModal toggle={this.toggleNewPathModal} onSubmit={(values) => console.log(values)} visible={this.state.newPathModalVisible} />
+                <NewPathModal toggle={this.toggleNewPathModal} onSubmit={this.props.createNewPath} visible={this.state.newPathModalVisible} />
             </div>
         );
     }
 }
 
-export default RootView;
+export default connect(null, {createNewPath})(RootView);
