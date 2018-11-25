@@ -31,16 +31,26 @@ class NewPathModal extends Component {
         this.props.toggle();
     }
 
+    updatePath = (path) => {
+        const distance = geolib.getPathLength(path);
+        this.props.addMapMarker({ path, distance });
+    }
+
     onAddMarker = (latLng) => {
         const path = [].concat(this.props.path);
         path.push(latLng);
-        const distance = geolib.getPathLength(path);
-        this.props.addMapMarker({ path, distance });
+        this.updatePath(path);
         this.setState({ addingMarker: false });
     }
 
+    onMarkerDrag = (index, latLng) => {
+        const path = [].concat(this.props.path);
+        path[index] = latLng;
+        this.updatePath(path);
+    }
+
     getDistance = () => {
-        const {distance} = this.props;
+        const { distance } = this.props;
         let valueType = distance > 1000 ? 'km' : 'm';
         let displayValue = distance > 1000 ? (distance / 1000).toFixed(2) : distance;
 
@@ -91,7 +101,7 @@ class NewPathModal extends Component {
                                             <FontAwesomeIcon className="d-inline-block mr-2" icon="map-marker-alt" />
                                             AddMarker
                                         </Button>
-                                        <MapContainer markers={this.props.path} onAddMarker={this.onAddMarker} addingMarker={this.state.addingMarker} />
+                                        <MapContainer markers={this.props.path} onMarkerDrag={this.onMarkerDrag} onAddMarker={this.onAddMarker} addingMarker={this.state.addingMarker} />
                                     </div>
                                 </div>
                             </div>
