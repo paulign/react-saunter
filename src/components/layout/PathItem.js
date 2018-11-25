@@ -7,7 +7,7 @@ class PathItem extends Component {
         return (
             <NavLink to="/path/1" className="path-item p-3" activeClassName="selected">
                 <div className="row align-items-center">
-                    <div className="col-auto">
+                    <div className="col-auto d-none d-lg-block">
                         <FontAwesomeIcon className="mr-3" size="3x" icon="expand-arrows-alt" />
                     </div>
                     <div className="col">
@@ -16,7 +16,7 @@ class PathItem extends Component {
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sagittis, felis in eleifend condimentum, quam eros molestie sapien, sed lacinia.
                             </div>
                     </div>
-                    <div className="col-3">
+                    <div className="col-lg-4 col-xl-3">
                         <div className="path-distance">
                             1.75 km
                             <FontAwesomeIcon className="path-open-details" size="2x" icon="angle-right" />
