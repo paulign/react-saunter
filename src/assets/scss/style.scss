@@ -15,6 +15,33 @@
     }
 }
 
+.form-control {
+    &:focus {
+        box-shadow: none;
+    }
+}
+
+.form-group.search-group {
+    position: relative;
+
+    .form-control {
+        padding-right: 40px;
+
+        &:focus {
+            +.search-icon {
+                color: $primary;
+            }
+        }
+    }
+    .search-icon {
+        position: absolute;
+        top: calc(50% - 10px);
+        right: 10px;
+        font-size: 20px;
+        color: $gray-400;
+    }
+}
+
 main {
     @include media-breakpoint-up(lg) {
         height: calc(100vh - 80px);

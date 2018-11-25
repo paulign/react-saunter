@@ -16,7 +16,7 @@ class MapContainer extends Component {
         let center = { lat: 50.447704, lng: 30.522050 };
 
         if (this.props.markers && this.props.markers.length) {
-            const _center = geolib.getCenter(this.props.markers);
+            const _center = geolib.getCenter([].concat(this.props.markers));
             center['lat'] = +_center.latitude;
             center['lng'] = +_center.longitude;
         }
@@ -28,13 +28,14 @@ class MapContainer extends Component {
 
         if (this.props.changableCenter && newID !== this.state.selectedID) {
             const center = { ...this.state.center };
+            await this.setState({ selectedID: newID });
 
             if (nextProps.markers && nextProps.markers.length) {
-                const _center = geolib.getCenter(nextProps.markers);
+                const _center = geolib.getCenter([].concat(nextProps.markers));
                 center['lat'] = +_center.latitude;
                 center['lng'] = +_center.longitude;
             }
-            await this.setState({ center });
+            
             if (this.map) {
                 this.map.panTo(center);
             }

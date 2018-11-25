@@ -17,25 +17,22 @@ class PathDetails extends Component {
         }
     }
     componentDidMount() {
-        this.loadPath();
+        this.loadPath(this.props.selectedID);
     }
 
     componentDidUpdate = async () => {
         const newID = this.props.match.params.id;
         if (this.state.selectedID !== newID) {
-            await this.setState({ selectedID: newID });
-            await this.loadPath();
+            await this.loadPath(newID);
         }
     }
 
     componentWillUnmount() {
-        console.log('unmount details');
         this.unsubscribeFromRef();
     }
 
-    loadPath = () => {
+    loadPath = (selectedID) => {
         this.unsubscribeFromRef();
-        const { selectedID } = this.state;
         this.ref = firebase.database().ref(`walking_paths/${selectedID}`);
         this.ref.on('value', this.onLoadPath);
     }
@@ -43,9 +40,9 @@ class PathDetails extends Component {
     onLoadPath = async (snapshot) => {
         try {
             const selectedPath = snapshot.val();
-            await this.setState({ isLoading: false, selectedPath });
+            await this.setState({ isLoading: false, selectedPath, selectedID: selectedPath.id });
         } catch (error) {
-            this.setState({ isLoading: false, selectedPath: null });
+            this.setState({ isLoading: false, selectedPath: null, selectedID: null });
         }
     }
 
