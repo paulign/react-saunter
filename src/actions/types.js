@@ -1,1 +1,4 @@
 export const ADD_MAP_MARKER = "ADD_MAP_MARKER";
+export const ADD_NEW_PATH = "ADD_NEW_PATH";
+export const ADD_NEW_PATH_SUCCESS = "ADD_NEW_PATH_SUCCESS";
+export const ADD_NEW_PATH_ERROR = "ADD_NEW_PATH_ERROR";

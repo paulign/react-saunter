@@ -2,7 +2,7 @@ import { reducer as formReducer } from 'redux-form';
 import { ADD_MAP_MARKER } from '../actions/types';
 
 const newPath = formReducer.plugin({
-    newPath: (state, action) => { 
+    newPath: (state, action) => {
         switch (action.type) {
             case ADD_MAP_MARKER:
                 return {

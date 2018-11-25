@@ -16,16 +16,6 @@ class NewPathModal extends Component {
         }
     }
 
-    renderTextInput = ({ input, label }) => {
-        return (
-            <FormGroup>
-                {label && <Label>{label}</Label>}
-                <Input {...input} />
-            </FormGroup>
-
-        )
-    }
-
     closeForm = () => {
         this.props.reset();
         this.props.toggle();
@@ -55,6 +45,16 @@ class NewPathModal extends Component {
         let displayValue = distance > 1000 ? (distance / 1000).toFixed(2) : distance;
 
         return `${displayValue} ${valueType}`
+    }
+
+    renderTextInput = ({ input, label }) => {
+        return (
+            <FormGroup>
+                {label && <Label>{label}</Label>}
+                <Input {...input} />
+            </FormGroup>
+
+        )
     }
 
     renderTextArea = ({
@@ -101,7 +101,13 @@ class NewPathModal extends Component {
                                             <FontAwesomeIcon className="d-inline-block mr-2" icon="map-marker-alt" />
                                             AddMarker
                                         </Button>
-                                        <MapContainer markers={this.props.path} onMarkerDrag={this.onMarkerDrag} onAddMarker={this.onAddMarker} addingMarker={this.state.addingMarker} />
+                                        <MapContainer
+                                            editable
+                                            markers={this.props.path}
+                                            onMarkerDrag={this.onMarkerDrag}
+                                            onAddMarker={this.onAddMarker}
+                                            addingMarker={this.state.addingMarker}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -140,7 +146,8 @@ const mapStateToProps = (state) => {
     const distance = state.form.newPath && state.form.newPath.values ? state.form.newPath.values.distance : 0
     return {
         path: path || [],
-        distance: distance || 0
+        distance: distance || 0,
+        isSubmitting: state.paths.isSubmitting
     }
 }
 export default connect(mapStateToProps, { addMapMarker })(NewPathModal);

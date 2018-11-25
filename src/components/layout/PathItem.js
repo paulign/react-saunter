@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NavLink } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
 
 class PathItem extends Component {
     render() {
@@ -28,4 +29,4 @@ class PathItem extends Component {
     }
 }
 
-export default PathItem;
+export default withRouter(PathItem);

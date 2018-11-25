@@ -6,10 +6,6 @@ class PathsList extends Component {
         return (
             <div className="paths-list-wrapper">
                 <PathItem />
-                <PathItem />
-                <PathItem />
-                <PathItem />
-                <PathItem />
             </div>
         );
     }

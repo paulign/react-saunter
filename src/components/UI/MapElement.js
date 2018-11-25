@@ -11,10 +11,10 @@ class MapContainer extends Component {
     }
 
     onMarkerDrag = (index, e) => {
-        const {onMarkerDrag} = this.props;
+        const { onMarkerDrag } = this.props;
         const latLng = { lat: e.latLng.lat(), lng: e.latLng.lng() };
 
-        if(onMarkerDrag) {
+        if (onMarkerDrag) {
             onMarkerDrag(index, latLng);
         }
 
@@ -31,7 +31,12 @@ class MapContainer extends Component {
                 onClick={this.onMapClick}
             >
                 {markers && markers.length && markers.map((marker, index) => {
-                    return <Marker key={index} defaultDraggable={true} onDragEnd={(e) => this.onMarkerDrag(index, e)} position={{ lat: marker.lat, lng: marker.lng }} />
+                    return <Marker
+                        key={index}
+                        defaultDraggable={!!this.props.editable}
+                        onDragEnd={(e) => this.onMarkerDrag(index, e)}
+                        position={{ lat: marker.lat, lng: marker.lng }}
+                    />
                 })}
                 {markers && markers.length > 1 &&
                     <Polyline path={markers} options={{ strokeColor: '#FF0000', strokeWidth: 2 }} />
