@@ -4,22 +4,32 @@ import { NavLink } from 'react-router-dom'
 import { withRouter } from 'react-router-dom';
 
 class PathItem extends Component {
+
+    getDistance = () => {
+        const { distance } = this.props;
+        let valueType = distance > 1000 ? 'km' : 'm';
+        let displayValue = distance > 1000 ? (distance / 1000).toFixed(2) : distance;
+
+        return `${displayValue} ${valueType}`
+    }
+
     render() {
+        const { id, title, short_description } = this.props;
         return (
-            <NavLink to="/path/1" className="path-item p-3" activeClassName="selected">
+            <NavLink to={`/path/${id}`} className="path-item p-3" activeClassName="selected">
                 <div className="row align-items-center">
                     <div className="col-auto d-none d-lg-block">
                         <FontAwesomeIcon className="mr-3" size="3x" icon="expand-arrows-alt" />
                     </div>
                     <div className="col">
-                        <h3 className="mb-2">Path title</h3>
+                        <h3 className="mb-2">{title}</h3>
                         <div>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sagittis, felis in eleifend condimentum, quam eros molestie sapien, sed lacinia.
-                            </div>
+                            {short_description}
+                        </div>
                     </div>
                     <div className="col-lg-4 col-xl-3">
                         <div className="path-distance">
-                            1.75 km
+                            {this.getDistance()}
                             <FontAwesomeIcon className="path-open-details" size="2x" icon="angle-right" />
                         </div>
                     </div>
