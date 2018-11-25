@@ -45,6 +45,7 @@ class RootView extends Component {
                             <Switch>
                                 <Route exact path="/" component={this.renderEmptyDetails} />
                                 <Route path="/path/:id" component={PathDetails} />
+                                <Route component={this.renderEmptyDetails} />
                             </Switch>
                         </div>
                     </div>

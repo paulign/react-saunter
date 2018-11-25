@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import firebase from '../../firebaseConfig';
 import MapContainer from '../containers/MapContainer';
+import { connect } from 'react-redux';
+import { toggleFavoriteState, removePath } from '../../actions';
+import Loading from '../UI/Loading';
 
 class PathDetails extends Component {
     constructor(props) {
@@ -26,27 +29,40 @@ class PathDetails extends Component {
 
     componentWillUnmount() {
         console.log('unmount details');
+        this.unsubscribeFromRef();
     }
 
-    loadPath = async () => {
-        try {
-            const { selectedID } = this.state;
-            this.ref = firebase.database().ref(`walking_paths/${selectedID}`);
-            const snapshot = await this.ref.once('value');
+    loadPath = () => {
+        this.unsubscribeFromRef();
+        const { selectedID } = this.state;
+        this.ref = firebase.database().ref(`walking_paths/${selectedID}`);
+        this.ref.on('value', this.onLoadPath);
+    }
 
+    onLoadPath = async (snapshot) => {
+        try {
             const selectedPath = snapshot.val();
-            await this.setState({ selectedPath });
+            await this.setState({ isLoading: false, selectedPath });
         } catch (error) {
             this.setState({ isLoading: false, selectedPath: null });
         }
     }
 
+    unsubscribeFromRef = () => {
+        if (this.ref) {
+            this.ref.off('value',this.onLoadPath);
+            this.ref = null;
+        }
+    }
+
     onToggleFavorite = (e) => {
         e.preventDefault();
+        this.props.toggleFavoriteState(this.state.selectedPath);
     }
 
     onRremove = (e) => {
         e.preventDefault();
+        this.props.removePath(this.state.selectedPath);
     }
 
     getDistance = () => {
@@ -66,7 +82,7 @@ class PathDetails extends Component {
         const { selectedPath } = this.state;
 
         return (
-            <div className="path-details px-lg-3 mb-4 mb-lg-0 pb-4 pb-lg-0">
+            <div className="path-details px-lg-3 mb-4 mb-lg-0 pb-4 pb-lg-0 position-relative">
                 {selectedPath && (
                     <div>
                         <div className="d-flex justify-content-between mb-4">
@@ -86,14 +102,21 @@ class PathDetails extends Component {
                             />
                         </div>
                         <div className="text-right">
-                            <a href="#toggle-favorite" className="d-block text-primary lead mb-3" onClick={this.onToggleFavorite}>Add to favorites</a>
+                            <a href="#toggle-favorite" className="d-block text-primary lead mb-3" onClick={this.onToggleFavorite}>{selectedPath.favorite ? "Remove from favorites" : "Add to favorites"}</a>
                             <a href="#remove" className="d-block text-danger lead" onClick={this.onRremove}>Remove</a>
                         </div>
                     </div>
                 )}
+                <Loading visible={this.props.isUpdating || this.state.isLoading}/>
             </div>
         );
     }
 }
 
-export default PathDetails;
+const mapStateToProps = (state) => {
+    return {
+        isUpdating: state.paths.isUpdating
+    }
+}
+
+export default connect(mapStateToProps, { toggleFavoriteState, removePath })(PathDetails);
