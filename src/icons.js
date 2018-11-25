@@ -1,6 +1,6 @@
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faExpandArrowsAlt } from '@fortawesome/free-solid-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faExpandArrowsAlt, faAngleRight, faStar } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faExpandArrowsAlt)
+library.add(faExpandArrowsAlt, faAngleRight, faStar);
 
-export default library
+export default library;

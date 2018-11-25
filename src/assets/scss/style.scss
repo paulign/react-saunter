@@ -18,5 +18,46 @@
 main {
     @include media-breakpoint-up(lg) {
         height: calc(100vh - 80px);
+        >.row {
+            height: 100%;
+        }
+    }
+
+    .paths-list-wrapper {
+        max-height: 100%;
+        overflow-y: auto;
+        .path-item {
+            border-radius: 3px;
+            cursor: pointer;
+            display: block;
+            text-decoration: none;
+            color: $dark;
+            background-color: $light;
+
+            &.selected {
+                background-color: $blue;
+                color: $white;
+                pointer-events: none;
+            }
+
+            .path-distance {
+                position: relative;
+                padding-right: 30px;
+                text-align: center;
+                white-space: nowrap;
+                font-size: 20px;
+                font-weight: bold;
+
+                .path-open-details {
+                    position: absolute;
+                    right: 0;
+                    top: calc(50% - 20px);
+                }
+            }
+
+            &:not(:last-child) {
+                margin-bottom: 15px;
+            }
+        }
     }
 }
